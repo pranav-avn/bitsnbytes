@@ -39,6 +39,49 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //   }
 // }
 //
+import 'package:firebase_admin/firebase_admin.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Future<void> sendFCMMessage() async {
+  const String serverKey = 'AIzaSyBRiATV2-UM1cimqYjZJZviMkbSZXmgzBo';
+  // const String fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+  const String fcmUrl = 'https://fcm.googleapis.com/v1/homeiqq/messages:send';
+  try {
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'key=$serverKey',
+    };
+
+    final body = jsonEncode({
+      'notification': {
+        'title': '!!! Fire Alert !!',
+        'body': 'Evacuate the building IMMEDIATELY!!!',
+      },
+      'priority': 'high',
+      'to':
+          '/topics/fire_alerts', // Send to all devices subscribed to 'fire_alerts' topic
+    });
+
+    final response = await http.post(
+      Uri.parse(fcmUrl),
+      headers: headers,
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      print('FCM message sent successfully');
+    } else {
+      print('Failed to send FCM message');
+      print('Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+  } catch (e) {
+    print('Error in Send Fire Alert Method :$e');
+  }
+}
+
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
@@ -64,9 +107,11 @@ class NotificationService {
 
       // Listen for foreground messages
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print(
-            'Message received in the foreground: ${message.notification?.title}');
-        // Handle the message here and show an alert/dialog if needed
+        print('Received a message while in the foreground!');
+        if (message.notification != null) {
+          print(
+              'Message also contained a notification: ${message.notification}');
+        }
       });
 
       // Listen for messages when the app is in the background but not terminated
@@ -110,9 +155,10 @@ Future<void> saveTokenToDatabase(String token) async {
     if (user != null) {
       String userId = user.uid;
 
-      await FirebaseFirestore.instance.collection('users').doc(userId).update({
-        'fcmToken': token,
-      });
+      await FirebaseFirestore.instance.collection('users').doc(userId).set({
+        'fcmtoken': token,
+      }, SetOptions(merge: true));
+      print("Saved fcmtoken in firestore: $token");
     }
   } catch (e) {
     print("Error while updating fcmtoken in firebase : $e");

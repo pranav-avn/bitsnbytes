@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:smarthome/Authentications/LoginScreen.dart';
+import 'Authentications/SignINScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,11 +11,11 @@ void main() async {
     // Initialize Firebase
     await Firebase.initializeApp(
       options: const FirebaseOptions(
-        apiKey: "AIzaSyBRiATV2-UM1cimqYjZJZviMkbSZXmgzBo",
-        appId: "1:139573230039:android:e52f5e5ebba5df33217392",
-        messagingSenderId: "139573230039",
-        projectId: "homeiqq",
-      ),
+          apiKey: "AIzaSyBRiATV2-UM1cimqYjZJZviMkbSZXmgzBo",
+          appId: "1:139573230039:android:e52f5e5ebba5df33217392",
+          messagingSenderId: "139573230039",
+          projectId: "homeiqq",
+          storageBucket: "homeiqq.appspot.com"),
     );
 
     // Initialize Firebase Messaging
@@ -39,9 +40,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessaging.instance.subscribeToTopic('fire_alerts');
     return MaterialApp(
       title: 'HackMegdon',
-      home: LoginPage(),
+      home: SignInPage(),
     );
   }
 }

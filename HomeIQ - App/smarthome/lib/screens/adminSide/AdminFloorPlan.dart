@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:smarthome/screens/userSide/floor_plan_rooms/room_pages.dart';
 
-class FloorPlanWidget extends StatefulWidget {
+class adminFloorPlanWidget extends StatefulWidget {
   @override
-  _FloorPlanWidgetState createState() => _FloorPlanWidgetState();
+  _adminFloorPlanWidgetState createState() => _adminFloorPlanWidgetState();
 }
 
-class _FloorPlanWidgetState extends State<FloorPlanWidget> {
+class _adminFloorPlanWidgetState extends State<adminFloorPlanWidget> {
   late Future<String> _imageUrlFuture;
 
   @override
@@ -28,57 +28,81 @@ class _FloorPlanWidgetState extends State<FloorPlanWidget> {
     }
   }
 
+  String _selectedBlock = 'Block A';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Floor Plan',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.blue,
-      ),
-      body: FutureBuilder<String>(
-        future: _imageUrlFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(
-                child: Text('Error loading image: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No image available'));
-          } else {
-            final imageUrl = snapshot.data!;
-            return GestureDetector(
-              onTapUp: (details) => _handleTap(context, details.localPosition),
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, progress) {
-                  if (progress == null) {
-                    return child;
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: progress.expectedTotalBytes != null
-                            ? progress.cumulativeBytesLoaded /
-                                (progress.expectedTotalBytes ?? 1)
-                            : null,
-                      ),
+      body: Center(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text("Select Block : "),
+                DropdownButton<String>(
+                  value: _selectedBlock,
+                  items: <String>['Block A', 'Block B', 'Block C']
+                      .map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
                     );
-                  }
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  print('Image loading error: $error');
-                  print('Stack trace: $stackTrace');
-                  return Center(child: Text('Failed to load image: $error'));
-                },
-              ),
-            );
-          }
-        },
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedBlock = newValue!;
+                    });
+                  },
+                ),
+              ],
+            ),
+            floorplan1(),
+          ],
+        ),
       ),
+    );
+  }
+
+  FutureBuilder<String> floorplan1() {
+    return FutureBuilder<String>(
+      future: _imageUrlFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error loading image: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No image available'));
+        } else {
+          final imageUrl = snapshot.data!;
+          return GestureDetector(
+            onTapUp: (details) => _handleTap(context, details.localPosition),
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, progress) {
+                if (progress == null) {
+                  return child;
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: progress.expectedTotalBytes != null
+                          ? progress.cumulativeBytesLoaded /
+                              (progress.expectedTotalBytes ?? 1)
+                          : null,
+                    ),
+                  );
+                }
+              },
+              errorBuilder: (context, error, stackTrace) {
+                print('Image loading error: $error');
+                print('Stack trace: $stackTrace');
+                return Center(child: Text('Failed to load image: $error'));
+              },
+            ),
+          );
+        }
+      },
     );
   }
 

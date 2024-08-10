@@ -42,12 +42,15 @@ class TemperatureSensor extends StatefulWidget {
 
 class BlynkFunctions extends State<TemperatureSensor> {
   final String baseUrl = 'http://blynk-cloud.com';
+  final String url =
+      'https://blr1.blynk.cloud/external/api/get?token=eGTiuLVeg2GRGqbN1YdVib6ByTvjBA_V&v0';
   Timer? timer;
   String blynkAuthToken =
       'eGTiuLVeg2GRGqbN1YdVib6ByTvjBA_V'; // Replace with your Blynk Auth Token
   //Pins
-  String TempPin = 'V1'; // Replace with the virtual pin used for temperature
+  String TempPin = 'v1'; // Replace with the virtual pin used for temperature
   String humPin = 'v0'; // Replace with the virtual pin used for humidity
+  String dustPin = 'v2';
   String fireSensorPin = 'V1';
   String ledLightPin = 'V1';
   String rfidPin = 'V1';
@@ -57,7 +60,8 @@ class BlynkFunctions extends State<TemperatureSensor> {
   int count = 0;
 
   //Values
-  double? temperature;
+  String? temperature;
+  String? dust;
   String humidity = 'Loading...';
   Timer? _debounce;
   bool ledStatus = false;
@@ -70,22 +74,26 @@ class BlynkFunctions extends State<TemperatureSensor> {
   @override
   void initState() {
     super.initState();
-    fetchTemperature();
+    timer = Timer.periodic(
+        Duration(seconds: 5), (Timer t) => fetchTemperature(Temppin: TempPin));
     timer = Timer.periodic(
         Duration(seconds: 5), (Timer t) => fetchHumidityData(humPin: humPin));
-    fetchHumidityData();
+    timer = Timer.periodic(
+        Duration(seconds: 5), (Timer t) => fetchdustData(dustPin: dustPin));
     fetchInitialLEDStatus();
   }
 
   Future<void> fetchTemperature({String? Temppin}) async {
     try {
-      final response = await http.get(
-          Uri.parse('http://blynk-cloud.com/$blynkAuthToken/get/$TempPin'));
+      final response = await http.get(Uri.parse(
+          'https://blr1.blynk.cloud/external/api/get?token=$blynkAuthToken&$TempPin'));
 
       if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body);
+        double temperatureValue = double.parse(response.body);
+        String temperatureString = temperatureValue.toString();
+        // String data = json.decode(response.body);
         setState(() {
-          temperature = double.parse(data[0].toString());
+          temperature = temperatureString;
         });
         // if (_debounce?.isActive ?? false) _debounce!.cancel();
         //       _debounce = Timer(const Duration(milliseconds: 500), () {
@@ -128,6 +136,37 @@ class BlynkFunctions extends State<TemperatureSensor> {
       print("Error fetching Humidity data : $e");
       setState(() {
         humidity = 'Error loading data';
+      });
+    }
+  }
+
+  Future<void> fetchdustData({String? dustPin}) async {
+    // final String apiUrl =
+    //     'http://blynk-cloud.com/$blynkAuthToken/get/$humPin'; // Replace with your API endpoint
+    final String apiUrl =
+        'https://blr1.blynk.cloud/external/api/get?token=$blynkAuthToken&$dustPin';
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      print('Response body: ${response.body}');
+      if (response.statusCode == 200) {
+        final data = response.body;
+        setState(() {
+          dust = '$data';
+        });
+        // if (_debounce?.isActive ?? false) _debounce!.cancel();
+        // _debounce = Timer(const Duration(milliseconds: 500), () {
+        //   setState(() {
+        //     humidity = data.toString();
+        //   });
+        // });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print("Error fetching Dust data : $e");
+      setState(() {
+        dust = 'Error loading data';
       });
     }
   }
@@ -274,13 +313,16 @@ class BlynkFunctions extends State<TemperatureSensor> {
           children: [
             temperature != null
                 ? Text(
-                    'Temperature: ${temperature!.toStringAsFixed(2)} °C',
+                    'Temperature: $temperature °C',
                     style: TextStyle(fontSize: 24),
                   )
                 : Text('Temperature : 40 °C'),
             SizedBox(height: 20),
             Text('Humidity : $humidity', style: TextStyle(fontSize: 24)),
             SizedBox(height: 20),
+            dust != null
+                ? Text('Dust Sensor: $dust')
+                : Text('Dust Sensor : Loading..'),
             LiteRollingSwitch(
               value: ledStatus,
               textOn: "ON",

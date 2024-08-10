@@ -39,6 +39,9 @@ class _adminAnnouncementScreenState extends State<adminAnnouncementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Announcements'),
+      ),
       body: Column(
         children: [
           Container(

@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
       // Navigate to the category screen after successful login
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => MyHomePage()),
+        MaterialPageRoute(builder: (context) => FloorPlanWidget()),
       );
     } on FirebaseAuthException catch (e) {
       print('Failed to sign in: $e');
