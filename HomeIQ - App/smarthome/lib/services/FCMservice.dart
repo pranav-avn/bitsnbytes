@@ -54,7 +54,10 @@ class NotificationService {
       // Print permission status
       print(
           'User granted Notification permission: ${settings.authorizationStatus}');
-
+      final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      if (apnsToken != null) {
+        print('apns Notification: $apnsToken');
+      }
       // Get the token and print it
       String? token = await _firebaseMessaging.getToken();
       print('FCM Token: $token');
