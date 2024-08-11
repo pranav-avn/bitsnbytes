@@ -25,6 +25,17 @@ char pass[] = "Pranav0811";
 #define BLYNK_AUTH_TOKEN "BRDMR-_efMmYcrURqYIi8C1h4kkRyHri"
 DHT dht(DHTPIN, DHTTYPE);
 BlynkTimer timer;
+BLYNK_WRITE(V4) 
+{
+    if(param.asInt() == 1)
+    {
+      digitalWrite(33,HIGH);  // Set digital pin 2 HIGH
+    }
+     else
+     {
+      digitalWrite(33,LOW);  // Set digital pin 2 LOW    
+     }
+}
 void sendSensor()
 {
   float h = dht.readHumidity();
@@ -51,6 +62,7 @@ void setup()
   Blynk.begin(auth, ssid, pass);
   dht.begin();
   timer.setInterval(1000L, sendSensor);
+  pinMode(33,OUTPUT);
 }
 void loop()
 {
