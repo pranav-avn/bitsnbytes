@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smarthome/Authentications/AdminLogin.dart';
 import 'package:smarthome/screens/homepage.dart';
+import 'package:smarthome/screens/userSide/floor_plan_rooms/floor_plan.dart';
 import 'package:smarthome/services/BlynkService.dart';
 
 class SignInPage extends StatefulWidget {
@@ -26,7 +27,7 @@ class _SignInPageState extends State<SignInPage> {
       // Navigate to the category screen after successful login
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => MyHomePage()),
+        MaterialPageRoute(builder: (context) => FloorPlanWidget()),
       );
     } on FirebaseAuthException catch (e) {
       print('Failed to sign in: $e');

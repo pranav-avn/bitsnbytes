@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smarthome/screens/LLM.dart';
@@ -26,10 +27,19 @@ class _MyHomePageState extends State<MyHomePage> {
     DeviceSelection(category: 'Industry', selectedDevices: []),
   ];
 
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+// Call this when the user logs in or at app startup
+
   @override
   void initState() {
     super.initState();
-    // initFCMToken();
+    initFCMToken();
+    try {
+      messaging.subscribeToTopic('fire_alerts');
+      print("Subscribed to FireAlerts");
+    } catch (e) {
+      print(e);
+    }
     print("hello");
   }
 
@@ -95,6 +105,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 );
               },
+            ),
+            ElevatedButton(
+              onPressed: () {
+                sendFCMMessage();
+              },
+              child: Text('Send Fire Alert'),
             ),
             ElevatedButton(
                 onPressed: () {
