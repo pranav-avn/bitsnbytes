@@ -29,6 +29,7 @@ class _LedControlPageState extends State<LedControlPage> {
   Future<void> _fetchInitialLEDStatus() async {
     // Dummy implementation for fetching LED status and brightness
     setState(() {
+      ledStatus = '1' == widget.blynkService.readPin('v4');
       // Set to true as default
       ledBrightness = 50.0; // Dummy brightness value
     });
