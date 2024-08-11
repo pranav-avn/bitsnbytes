@@ -5,6 +5,8 @@ import 'package:smarthome/screens/homepage.dart';
 import 'package:smarthome/screens/userSide/floor_plan_rooms/floor_plan.dart';
 import 'package:smarthome/services/BlynkService.dart';
 
+import '../screens/adminSide/adminHome.dart';
+
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
   @override
@@ -27,7 +29,7 @@ class _SignInPageState extends State<SignInPage> {
       // Navigate to the category screen after successful login
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => FloorPlanWidget()),
+        MaterialPageRoute(builder: (context) => MyHomePage()),
       );
     } on FirebaseAuthException catch (e) {
       print('Failed to sign in: $e');
@@ -80,7 +82,7 @@ class _SignInPageState extends State<SignInPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => AdminLoginPage()));
+                                    builder: (context) => adminHomePage()));
                           },
                           child: Text('Admin Login',
                               style: TextStyle(fontWeight: FontWeight.bold))),

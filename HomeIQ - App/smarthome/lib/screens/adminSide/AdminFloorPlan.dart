@@ -37,8 +37,10 @@ class _adminFloorPlanWidgetState extends State<adminFloorPlanWidget> {
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("Select Block : "),
+                SizedBox(height: 10),
                 DropdownButton<String>(
                   value: _selectedBlock,
                   items: <String>['Block A', 'Block B', 'Block C']
@@ -63,46 +65,78 @@ class _adminFloorPlanWidgetState extends State<adminFloorPlanWidget> {
     );
   }
 
-  FutureBuilder<String> floorplan1() {
-    return FutureBuilder<String>(
-      future: _imageUrlFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error loading image: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No image available'));
-        } else {
-          final imageUrl = snapshot.data!;
-          return GestureDetector(
-            onTapUp: (details) => _handleTap(context, details.localPosition),
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, progress) {
-                if (progress == null) {
-                  return child;
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: progress.expectedTotalBytes != null
-                          ? progress.cumulativeBytesLoaded /
-                              (progress.expectedTotalBytes ?? 1)
-                          : null,
-                    ),
-                  );
-                }
-              },
-              errorBuilder: (context, error, stackTrace) {
-                print('Image loading error: $error');
-                print('Stack trace: $stackTrace');
-                return Center(child: Text('Failed to load image: $error'));
-              },
-            ),
-          );
-        }
-      },
+  Widget floorplan1() {
+    return Column(
+      children: [
+        FutureBuilder<String>(
+          future: _imageUrlFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(
+                  child: Text('Error loading image: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('No image available'));
+            } else {
+              final imageUrl = snapshot.data!;
+              return GestureDetector(
+                onTapUp: (details) =>
+                    _handleTap(context, details.localPosition),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, progress) {
+                    if (progress == null) {
+                      return child;
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: progress.expectedTotalBytes != null
+                              ? progress.cumulativeBytesLoaded /
+                                  (progress.expectedTotalBytes ?? 1)
+                              : null,
+                        ),
+                      );
+                    }
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    print('Image loading error: $error');
+                    print('Stack trace: $stackTrace');
+                    return Center(child: Text('Failed to load image: $error'));
+                  },
+                ),
+              );
+            }
+          },
+        ),
+        SizedBox(height: 30),
+        Container(
+          child: Column(
+            children: [
+              Text("OCCUPANCY COUNT",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              SizedBox(height: 5),
+              Text('Auditorium :100/180'),
+              SizedBox(height: 5),
+              Text('Dining Room :50/100'),
+              SizedBox(height: 5),
+              Text('MBA Office :2/4'),
+              SizedBox(height: 5),
+              Text('Room 103 :50/60'),
+              SizedBox(height: 5),
+              Text('Room 104 :55/60'),
+              SizedBox(height: 5),
+              Text(
+                'Room 105 :60/60',
+                style: TextStyle(color: Colors.red),
+              ),
+              SizedBox(height: 5),
+              Text('Room 106 :52/60'),
+            ],
+          ),
+        )
+      ],
     );
   }
 

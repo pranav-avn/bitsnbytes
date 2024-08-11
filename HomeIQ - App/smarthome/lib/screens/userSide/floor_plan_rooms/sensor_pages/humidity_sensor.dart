@@ -13,7 +13,7 @@ class HumiditySensorPage extends StatefulWidget {
 }
 
 class _HumiditySensorPageState extends State<HumiditySensorPage> {
-  String humidity = 'Loading...';
+  String humidity = '39';
 
   @override
   void initState() {
@@ -42,9 +42,19 @@ class _HumiditySensorPageState extends State<HumiditySensorPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Humidity: $humidity',
-              style: TextStyle(fontSize: 24),
+            Container(
+              alignment: Alignment.center,
+              color: Colors.purple.shade100,
+              height: 160,
+              width: 160,
+              child: Text(
+                'Humidity \n$humidity',
+                style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(

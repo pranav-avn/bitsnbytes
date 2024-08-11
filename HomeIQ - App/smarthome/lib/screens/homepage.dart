@@ -2,6 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smarthome/screens/LLM.dart';
+import 'package:smarthome/screens/userSide/camerapage.dart';
+import 'package:smarthome/screens/userSide/modelResultDisplayPage.dart';
 import 'package:smarthome/services/FCMservice.dart';
 import 'package:smarthome/screens/Sensorsdisplay.dart';
 import 'package:smarthome/models/Deviceselection.dart';
@@ -106,12 +108,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
-            ElevatedButton(
-              onPressed: () {
-                sendFCMMessage();
-              },
-              child: Text('Send Fire Alert'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     sendFCMMessage();
+            //   },
+            //   child: Text('Send Fire Alert'),
+            // ),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(

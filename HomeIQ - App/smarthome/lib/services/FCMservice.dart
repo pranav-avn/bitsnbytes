@@ -46,8 +46,8 @@ import 'package:http/http.dart' as http;
 
 Future<void> sendFCMMessage() async {
   const String serverKey = 'AIzaSyBRiATV2-UM1cimqYjZJZviMkbSZXmgzBo';
-  // const String fcmUrl = 'https://fcm.googleapis.com/fcm/send';
-  const String fcmUrl = 'https://fcm.googleapis.com/v1/homeiqq/messages:send';
+  const String fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+  // const String fcmUrl = 'https://fcm.googleapis.com/v1/homeiqq/messages:send';
   try {
     final headers = {
       'Content-Type': 'application/json',

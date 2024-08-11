@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'HackMegdon',
       home: SignInPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

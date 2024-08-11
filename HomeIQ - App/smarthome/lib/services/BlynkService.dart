@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,7 +13,8 @@ class BlynkService {
   BlynkService(this.authToken);
 
   Future<void> writePin(String pin, String value) async {
-    final url = Uri.parse('$baseUrl/$authToken/update/$pin?value=$value');
+    final url = Uri.parse(
+        'https://blr1.blynk.cloud/external/api/update?token=eGTiuLVeg2GRGqbN1YdVib6ByTvjBA_V&v4=$value');
     final response = await http.get(url);
 
     if (response.statusCode != 200) {
@@ -58,6 +60,7 @@ class BlynkFunctions extends State<TemperatureSensor> {
   String irPin = 'V1';
   String soilPin = 'V1';
   int count = 0;
+  String occupancyPin = 'v2';
 
   //Values
   String? temperature;
@@ -244,6 +247,34 @@ class BlynkFunctions extends State<TemperatureSensor> {
     } catch (e) {
       print('Error reading sensor data: $e');
       return null;
+    }
+  }
+
+  Future<void> _checkOccupancy() async {
+    final response =
+        await http.get(Uri.parse('$baseUrl/$blynkAuthToken/get/$occupancyPin'));
+
+    if (response.statusCode == 200) {
+      final occupancy = response.body;
+      if (occupancy == '0' && ledStatus) {
+        await _turnOffLight();
+      }
+    } else {
+      print('Failed to get occupancy');
+    }
+  }
+
+  Future<void> _turnOffLight() async {
+    final response = await http
+        .get(Uri.parse('$baseUrl/$blynkAuthToken/update/$ledLightPin?value=0'));
+
+    if (response.statusCode == 200) {
+      setState(() {
+        ledStatus = false;
+      });
+      print('Light turned off');
+    } else {
+      print('Failed to turn off light');
     }
   }
 
