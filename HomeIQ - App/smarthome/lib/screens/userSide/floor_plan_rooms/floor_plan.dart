@@ -197,13 +197,16 @@ class FloorPlanWidget extends StatefulWidget {
 }
 
 class _FloorPlanWidgetState extends State<FloorPlanWidget> {
-  late Future<String> _firstFloorImageUrlFuture;
+  late Future<String> firstFloorImageUrlFuture;
   late Future<String> _secondFloorImageUrlFuture;
+  List<String> options = ["Block A", "Block B"];
+
+  int _selectedBlockIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _firstFloorImageUrlFuture = _fetchImageUrl('image/floor_map.jpeg');
+    firstFloorImageUrlFuture = _fetchImageUrl('image/floor_map.jpeg');
     _secondFloorImageUrlFuture = _fetchImageUrl('image/FLOOR2.jpg');
   }
 
@@ -215,35 +218,59 @@ class _FloorPlanWidgetState extends State<FloorPlanWidget> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> floors = [
+      buildFloorPlan(context, firstFloorImageUrlFuture, handleFirstFloorTap),
+      buildFloorPlan(context, _secondFloorImageUrlFuture, handleSecondFloorTap),
+    ];
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Floor Plan',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          appBar: AppBar(
+            title: Text(
+              'Floor Plan',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            backgroundColor: Colors.blue,
           ),
-          backgroundColor: Colors.blue,
-          bottom: TabBar(
-            tabs: [
-              Tab(text: 'First Floor'),
-              Tab(text: 'Second Floor'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            _buildFloorPlan(
-                context, _firstFloorImageUrlFuture, _handleFirstFloorTap),
-            _buildFloorPlan(
-                context, _secondFloorImageUrlFuture, _handleSecondFloorTap),
-          ],
-        ),
-      ),
+          // body: TabBarView(
+          //   children: [
+          //     _buildFloorPlan(
+          //         context, _firstFloorImageUrlFuture, _handleFirstFloorTap),
+          //     _buildFloorPlan(
+          //         context, _secondFloorImageUrlFuture, _handleSecondFloorTap),
+          //   ],
+          // ),
+          body: Center(
+            child: Column(
+              children: [
+                Text("Select Block : "),
+                SizedBox(height: 10),
+                DropdownButton<String>(
+                  value: options[_selectedBlockIndex],
+                  items: options.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedBlockIndex = options.indexOf(newValue!);
+                      print('Index: $_selectedBlockIndex');
+                    });
+                  },
+                ),
+                floors[_selectedBlockIndex],
+                // buildFloorPlan(
+                //     context, _firstFloorImageUrlFuture, _handleFirstFloorTap),
+              ],
+            ),
+          )),
     );
   }
 
-  Widget _buildFloorPlan(BuildContext context, Future<String> imageUrlFuture,
+  Widget buildFloorPlan(BuildContext context, Future<String> imageUrlFuture,
       void Function(BuildContext, Offset) onTap) {
     return FutureBuilder<String>(
       future: imageUrlFuture,
@@ -256,15 +283,12 @@ class _FloorPlanWidgetState extends State<FloorPlanWidget> {
           return Center(child: Text('No image data available'));
         } else {
           final imageUrl = snapshot.data!;
-          return Padding(
-            padding: const EdgeInsets.only(top: 40.0),
-            child: GestureDetector(
-              onTapUp: (details) {
-                onTap(context, details.localPosition);
-              },
-              child: Image.network(
-                imageUrl,
-              ),
+          return GestureDetector(
+            onTapUp: (details) {
+              onTap(context, details.localPosition);
+            },
+            child: Image.network(
+              imageUrl,
             ),
           );
         }
@@ -272,7 +296,7 @@ class _FloorPlanWidgetState extends State<FloorPlanWidget> {
     );
   }
 
-  void _handleFirstFloorTap(BuildContext context, Offset position) {
+  void handleFirstFloorTap(BuildContext context, Offset position) {
     if (position.dx >= 96 &&
         position.dx <= 107 &&
         position.dy >= 73 &&
@@ -426,7 +450,7 @@ class _FloorPlanWidgetState extends State<FloorPlanWidget> {
     }
   }
 
-  void _handleSecondFloorTap(BuildContext context, Offset position) {
+  void handleSecondFloorTap(BuildContext context, Offset position) {
     if (position.dx >= 92 &&
         position.dx <= 281 &&
         position.dy >= 104 &&

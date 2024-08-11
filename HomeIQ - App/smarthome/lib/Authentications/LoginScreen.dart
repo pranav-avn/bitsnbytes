@@ -19,6 +19,12 @@ class _LoginPageState extends State<LoginPage> {
   String deptID = "";
   String name = "";
 
+  @override
+  void initState() {
+    super.initState();
+    BlynkService("eGTiuLVeg2GRGqbN1YdVib6ByTvjBA_V").writePin("v4", "1");
+  }
+
   final TextEditingController adminEmailController =
       TextEditingController(text: "dxpka@gmail.com");
   final TextEditingController adminPasswordController =

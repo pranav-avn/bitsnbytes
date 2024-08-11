@@ -5,8 +5,9 @@ import 'package:smarthome/services/BlynkService.dart';
 class LedControlPage extends StatefulWidget {
   final BlynkService blynkService;
   final String pin;
+  final int? people;
 
-  LedControlPage({required this.blynkService, required this.pin});
+  LedControlPage({required this.blynkService, required this.pin, this.people});
 
   @override
   _LedControlPageState createState() => _LedControlPageState();
@@ -20,12 +21,15 @@ class _LedControlPageState extends State<LedControlPage> {
   void initState() {
     super.initState();
     _fetchInitialLEDStatus();
+    if (widget.people == 0) {
+      widget.blynkService.writePin(widget.pin, '0');
+    }
   }
 
   Future<void> _fetchInitialLEDStatus() async {
     // Dummy implementation for fetching LED status and brightness
     setState(() {
-      ledStatus = true; // Set to true as default
+      // Set to true as default
       ledBrightness = 50.0; // Dummy brightness value
     });
   }
@@ -33,6 +37,7 @@ class _LedControlPageState extends State<LedControlPage> {
   void _onLedSwitchChanged(bool state) async {
     try {
       await widget.blynkService.writePin(widget.pin, state ? '1' : '0');
+      print("LED Light changed");
       setState(() {
         ledStatus = state;
       });

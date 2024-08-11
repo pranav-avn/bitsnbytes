@@ -90,8 +90,10 @@ class RoomPage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => LedControlPage(
-                            blynkService: BlynkService('your-auth-token-here'),
-                            pin: 'V2',
+                            blynkService: BlynkService(
+                                'eGTiuLVeg2GRGqbN1YdVib6ByTvjBA_V'),
+                            pin: 'v4',
+                            people: people,
                           ),
                         ),
                       );

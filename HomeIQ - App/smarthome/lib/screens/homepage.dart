@@ -121,34 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       MaterialPageRoute(
                           builder: (context) => FloorPlanWidget()));
                 },
-                child: Text('Block A - Floor 1')),
-            SizedBox(height: 10),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FloorPlanWidget()));
-                },
-                child: Text('Block A - Floor2')),
-            SizedBox(height: 10),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FloorPlanWidget()));
-                },
-                child: Text('Block A - Floor 3')),
-            SizedBox(height: 10),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FloorPlanWidget()));
-                },
-                child: Text('Block B')),
+                child: Text('Floor PLans')),
           ],
         ),
       ),

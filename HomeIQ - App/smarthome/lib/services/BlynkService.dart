@@ -13,17 +13,18 @@ class BlynkService {
   BlynkService(this.authToken);
 
   Future<void> writePin(String pin, String value) async {
-    final url = Uri.parse(
+    try{final url = Uri.parse(
         'https://blr1.blynk.cloud/external/api/update?token=eGTiuLVeg2GRGqbN1YdVib6ByTvjBA_V&v4=$value');
     final response = await http.get(url);
 
     if (response.statusCode != 200) {
       throw Exception('Failed to write pin');
-    }
+    }}catch(e){print(e);}
+
   }
 
   Future<String> readPin(String pin) async {
-    final url = Uri.parse('$baseUrl/$authToken/get/$pin');
+    final url = Uri.parse('https://blr1.blynk.cloud/external/api/get?token=eGTiuLVeg2GRGqbN1YdVib6ByTvjBA_V&v4');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
