@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "139573230039",
+    "firebase_url": "https://homeiqq-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "homeiqq",
+    "storage_bucket": "homeiqq.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139573230039:android:589e0e39cc6c8af2217392",
+        "android_client_info": {
+          "package_name": "com.bitsnbytes.smarthome.smarthome"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRiATV2-UM1cimqYjZJZviMkbSZXmgzBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139573230039:android:e52f5e5ebba5df33217392",
+        "android_client_info": {
+          "package_name": "com.example.hackmegdon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRiATV2-UM1cimqYjZJZviMkbSZXmgzBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
