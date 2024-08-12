@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smarthome/Authentications/healthScreen1.dart';
 import 'package:smarthome/screens/LLM.dart';
 import 'package:smarthome/screens/userSide/camerapage.dart';
 import 'package:smarthome/screens/userSide/modelResultDisplayPage.dart';
@@ -45,6 +46,17 @@ class _MyHomePageState extends State<MyHomePage> {
     print("hello");
   }
 
+  void _onSelected(BuildContext context, int item) {
+    switch (item) {
+      case 0:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => healthscreen1()));
+        break;
+      case 1:
+        Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +66,16 @@ class _MyHomePageState extends State<MyHomePage> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue,
+        actions: [
+          PopupMenuButton<int>(
+            color: Colors.white,
+            onSelected: (item) => _onSelected(context, item),
+            itemBuilder: (context) => [
+              PopupMenuItem<int>(value: 0, child: Text('Add Health metrics')),
+              PopupMenuItem<int>(value: 1, child: Text('Logout')),
+            ],
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

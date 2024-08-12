@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:smarthome/screens/userSide/floor_plan_rooms/floor_plan.dart';
 import 'package:smarthome/screens/userSide/floor_plan_rooms/room_pages.dart';
 
 class adminFloorPlanWidget extends StatefulWidget {
@@ -9,10 +10,16 @@ class adminFloorPlanWidget extends StatefulWidget {
 
 class _adminFloorPlanWidgetState extends State<adminFloorPlanWidget> {
   late Future<String> _imageUrlFuture;
+  late Future<String> firstFloorImageUrlFuture;
+  late Future<String> _secondFloorImageUrlFuture;
+  List<String> options = ["Block A", "Block B"];
+  int _selectedBlockIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    firstFloorImageUrlFuture = _getImageUrl('image/floor_map.jpeg');
+    _secondFloorImageUrlFuture = _getImageUrl('image/FLOOR2.jpg');
     _imageUrlFuture = _getImageUrl('image/floor_map.jpeg');
   }
 
@@ -28,10 +35,12 @@ class _adminFloorPlanWidgetState extends State<adminFloorPlanWidget> {
     }
   }
 
-  String _selectedBlock = 'Block A';
-
   @override
   Widget build(BuildContext context) {
+    List<Widget> floors = [
+      buildFloorPlan(context, firstFloorImageUrlFuture, handleFirstFloorTap),
+      buildFloorPlan(context, _secondFloorImageUrlFuture, handleSecondFloorTap),
+    ];
     return Scaffold(
       body: Center(
         child: Column(
@@ -42,9 +51,8 @@ class _adminFloorPlanWidgetState extends State<adminFloorPlanWidget> {
                 Text("Select Block : "),
                 SizedBox(height: 10),
                 DropdownButton<String>(
-                  value: _selectedBlock,
-                  items: <String>['Block A', 'Block B', 'Block C']
-                      .map((String value) {
+                  value: options[_selectedBlockIndex],
+                  items: options.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -52,13 +60,14 @@ class _adminFloorPlanWidgetState extends State<adminFloorPlanWidget> {
                   }).toList(),
                   onChanged: (String? newValue) {
                     setState(() {
-                      _selectedBlock = newValue!;
+                      _selectedBlockIndex = options.indexOf(newValue!);
+                      print('Index: $_selectedBlockIndex');
                     });
                   },
                 ),
               ],
             ),
-            floorplan1(),
+            floors[_selectedBlockIndex],
           ],
         ),
       ),
