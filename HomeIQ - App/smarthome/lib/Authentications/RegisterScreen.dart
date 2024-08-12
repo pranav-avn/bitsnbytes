@@ -55,7 +55,7 @@ class _registerScreenState extends State<registerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register', style: appTstyle()),
+        title: Text('Register'),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -89,8 +89,7 @@ class _registerScreenState extends State<registerScreen> {
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                      onPressed: _registerUser,
-                      child: Text('Login', style: buttonTstlye()))
+                      onPressed: _registerUser, child: Text('Register'))
                 ],
               ),
             ),

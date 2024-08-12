@@ -14,6 +14,8 @@ class _healthscreen1State extends State<healthscreen1> {
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _waterIntakeController = TextEditingController();
+
   String? _gender;
   final TextEditingController _bmiController = TextEditingController();
   final TextEditingController _waistController = TextEditingController();
@@ -35,8 +37,8 @@ class _healthscreen1State extends State<healthscreen1> {
         'gender': _gender ?? 'Male',
         'bmi': _bmiController.text ?? 30,
       });
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => healthscreen2()));
+      // Navigator.push(
+      //     context, MaterialPageRoute(builder: (context) => healthscreen2()));
     } catch (e) {
       print(e);
     }
@@ -84,6 +86,7 @@ class _healthscreen1State extends State<healthscreen1> {
                 children: [
                   Text("Gender : "),
                   DropdownButton<String>(
+                    value: _gender,
                     items: ['Male', 'Female', 'Prefer not to say']
                         .map((String gender) {
                       return DropdownMenuItem<String>(
@@ -103,6 +106,12 @@ class _healthscreen1State extends State<healthscreen1> {
               TextField(
                 controller: _bmiController,
                 decoration: InputDecoration(labelText: 'BMI'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                // controller: _waterIntakeController,
+                decoration:
+                    InputDecoration(labelText: 'Enter your Water intake'),
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 9),

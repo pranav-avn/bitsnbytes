@@ -6,6 +6,7 @@ import 'package:smarthome/screens/userSide/floor_plan_rooms/floor_plan.dart';
 import 'package:smarthome/services/BlynkService.dart';
 
 import '../screens/adminSide/adminHome.dart';
+import 'RegisterScreen.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -86,6 +87,15 @@ class _SignInPageState extends State<SignInPage> {
                           },
                           child: Text('Admin Login',
                               style: TextStyle(fontWeight: FontWeight.bold))),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => registerScreen()));
+                          },
+                          child: Text('Register')),
                     ],
                   )
                 ],

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:smarthome/Authentications/healthScreen1.dart';
 import 'package:smarthome/Authentications/healthscreen3.dart';
 
 class healthscreen2 extends StatefulWidget {
@@ -15,20 +13,27 @@ class _healthscreen2State extends State<healthscreen2> {
   final TextEditingController _sleepDurationController =
       TextEditingController();
   String? _sleepQuality;
-  late TextEditingController _dietController = TextEditingController();
+  final TextEditingController _dietController = TextEditingController();
   final TextEditingController _waterIntakeController = TextEditingController();
   String? _smokingStatus;
   String? _alcoholConsumption;
   String? _caffeineIntake;
   String? _stressLevel;
   String? _mentalHealth;
-  late String _selectedAcoholConsumption = "None";
-  late String _selectedSmokinStatus = "Never";
-  late String _selectedcaffeineIntake = "Often";
-  late String _selectedmentalHealth = "Choose mental Health status";
-  late String _selectedDiet = "Select Dietary Type";
-  late String _selectedSleepQuality = "Choose Sleep Quality";
-  String _selectedWaterUnit = 'liter';
+  String? _selectedSleepQuality;
+  String? _selectedDiet;
+  String? _selectedWaterUnit;
+
+  List<String> sleepQualityOptions = ['Good', 'Poor', 'Disturbed'];
+  List<String> dietOptions = ['Vegetarian', 'Vegan', 'Non-Vegetarian'];
+  List<String> waterUnitOptions = ['liter', 'ounces'];
+  List<String> smokingStatusOptions = [
+    'Non-Smoker',
+    'Occasional Smoker',
+    'Regular Smoker'
+  ];
+  List<String> caffeineOptions = ['None', 'Occasionally', 'Regularly'];
+  List<String> mentalHealthOptions = ['Anxiety', 'Depression', 'Mood Swings'];
 
   Future<void> _submitData() async {
     try {
@@ -36,10 +41,16 @@ class _healthscreen2State extends State<healthscreen2> {
           .collection('users')
           .doc('userId')
           .update({
-        'sleep_duration': _sleepDurationController.text ?? 'Not mentioned',
+        'sleep_duration': _sleepDurationController.text.isNotEmpty
+            ? _sleepDurationController.text
+            : 'Not mentioned',
         'sleep_quality': _sleepQuality ?? 'Not mentioned',
-        'dietary_habits': _dietController.text ?? 'Not mentioned',
-        'daily_water_intake': _waterIntakeController.text ?? 'Not mentioned',
+        'dietary_habits': _dietController.text.isNotEmpty
+            ? _dietController.text
+            : 'Not mentioned',
+        'daily_water_intake': _waterIntakeController.text.isNotEmpty
+            ? _waterIntakeController.text
+            : 'Not mentioned',
         'smoking_status': _smokingStatus ?? 'Not mentioned',
         'alcohol_consumption': _alcoholConsumption ?? 'Not mentioned',
         'caffeine_intake': _caffeineIntake ?? 'Not mentioned',
@@ -59,141 +70,112 @@ class _healthscreen2State extends State<healthscreen2> {
       appBar: AppBar(
         title: Text('Lifestyle Information'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: <Widget>[
-              TextFormField(
-                controller: _sleepDurationController,
-                decoration:
-                    InputDecoration(labelText: 'Sleep Duration (hours)'),
-                keyboardType: TextInputType.number,
-                // validator: (value) {
-                //   if (value == null || value.isEmpty) {
-                //     return 'Please enter sleep duration';
-                //   }
-                //   return null;
-                // },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text("Sleep Quality"),
-                  DropdownButton<String>e(
-                    value: _selectedSleepQuality,
-                    items: ['Good', 'Poor', 'Disturbed'].map((String quality) {
-                      return DropdownMenuItem<String>(
-                        value: quality,
-                        child: Text(quality),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedSleepQuality = value!;
-                        _sleepQuality = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-
-              SizedBox(height: 9),
-              Text("Food Preferrences"),
-              DropdownButton<String>(
-                items: ['Vegetarian', 'Vegan', 'Non-Vegetarian']
-                    .map((String quality) {
-                  return DropdownMenuItem<String>(
-                    value: quality,
-                    child: Text(quality),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _dietController.text = "${_dietController.text} $value";
-                  });
-                },
-              ),
-              SizedBox(height: 9),
-              TextFormField(
-                controller: _waterIntakeController,
-                decoration: InputDecoration(labelText: 'Water Intake'),
-                keyboardType: TextInputType.number,
-                // validator: (value) {
-                //   if (value == null || value.isEmpty) {
-                //     return 'Please enter Water intake';
-                //   }
-                //   return null;
-                // },
-              ),
-              DropdownButton<String>(
-                items: ['liter', 'ounces'].map((String quality) {
-                  return DropdownMenuItem<String>(
-                    value: _selectedWaterUnit,
-                    child: Text(quality),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedWaterUnit = value!;
-                    _waterIntakeController.text =
-                        "${_waterIntakeController.text} $value";
-                  });
-                },
-              ),
-
-              SizedBox(height: 9),
-              DropdownButton<String>(
-                items: ['Non-Smoker', 'Occasional Smoker', 'Regular Smoker']
-                    .map((String quality) {
-                  return DropdownMenuItem<String>(
-                    value: quality,
-                    child: Text(quality),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _smokingStatus = value;
-                  });
-                },
-              ),
-              SizedBox(height: 9),
-              DropdownButton<String>(
-                items:
-                    ['None', 'Occasionally', 'Regularly'].map((String quality) {
-                  return DropdownMenuItem<String>(
-                    value: quality,
-                    child: Text(quality),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _caffeineIntake = value;
-                  });
-                },
-              ),
-              SizedBox(height: 9),
-              DropdownButton<String>(
-                items: ['Anxiety', 'Depression', 'Mood Swings']
-                    .map((String quality) {
-                  return DropdownMenuItem<String>(
-                    value: quality,
-                    child: Text(quality),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _mentalHealth = value;
-                  });
-                },
-              ),
-              // Similar fields for diet, water intake, smoking, etc.
-              ElevatedButton(
-                onPressed: _submitData,
-                child: Text('Submit & Next'),
-              ),
-            ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: _waterIntakeController,
+                  decoration:
+                      InputDecoration(labelText: 'Enter your Water intake'),
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(height: 16.0),
+                DropdownButton<String>(
+                  value: _selectedWaterUnit,
+                  items: waterUnitOptions.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedWaterUnit = newValue!;
+                    });
+                  },
+                ),
+                SizedBox(height: 16.0),
+                DropdownButton<String>(
+                  value: _sleepQuality,
+                  items: sleepQualityOptions.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _sleepQuality = newValue;
+                    });
+                  },
+                ),
+                SizedBox(height: 16.0),
+                DropdownButton<String>(
+                  value: _selectedDiet,
+                  items: dietOptions.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedDiet = newValue!;
+                    });
+                  },
+                ),
+                SizedBox(height: 16.0),
+                DropdownButton<String>(
+                  value: _smokingStatus,
+                  items: smokingStatusOptions.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _smokingStatus = newValue!;
+                    });
+                  },
+                ),
+                SizedBox(height: 16.0),
+                DropdownButton<String>(
+                  value: _caffeineIntake,
+                  items: caffeineOptions.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _caffeineIntake = newValue!;
+                    });
+                  },
+                ),
+                SizedBox(height: 16.0),
+                TextField(
+                  controller: TextEditingController(text: _alcoholConsumption),
+                  decoration:
+                      InputDecoration(labelText: 'Alcohol Consumption :'),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    _alcoholConsumption = value;
+                  },
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: _submitData,
+                  child: Text('Submit & Next'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
