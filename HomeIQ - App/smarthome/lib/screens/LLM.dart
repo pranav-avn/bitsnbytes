@@ -10,6 +10,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  final String recommendation = "";
   const MyApp({super.key});
 
   @override
@@ -64,8 +65,12 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  void _sendRecommendationRequest() {
-    String sensorDataMessage = '''
+  void _sendRecommendationRequest({required int value}) {
+    String sensorDataMessage = ''' ''';
+
+    switch (value) {
+      case 0:
+        sensorDataMessage = '''
 What kind of recommendations can be given to the user who is in a room with sensor data as below:
 Temperature: 38°C
 Humidity: 40%
@@ -79,6 +84,22 @@ Ammonia/Urea sensor in bathroom: 40
 
 Give it as short & direct bulletin points.
 ''';
+        break;
+      case 1:
+        sensorDataMessage = '''
+what kind of health recommendations can be given to the user whose health metrics is as below:
+Height : 160cm
+Weight: 50kg
+Age: 20yrs
+Gender : Female
+BMI: 20
+Water Intake (per day in liters): 2L
+Sleep Duration (average hours of sleep per night) - 7hrs
+Sleep Quality (e.g., Good, Poor, Disturbed) - Poor
+
+Give them as short direct bulletin points on immediate concerns what the user should do
+''';
+    }
     ChatMessage sensorMessage = ChatMessage(
       user: _currentUser,
       createdAt: DateTime.now(),
@@ -89,7 +110,9 @@ Give it as short & direct bulletin points.
     ChatMessage recommendationmessage = ChatMessage(
         user: _currentUser,
         createdAt: DateTime.now(),
-        text: "Give me recommendations for my room");
+        text: value == 0
+            ? "Give some recommendations for my room"
+            : "Give some recommendations for my health");
 
     setState(() {
       _messages.insert(0, recommendationmessage);
@@ -114,15 +137,29 @@ Give it as short & direct bulletin points.
     }
   }
 
+  void _onSelected(BuildContext context, int item) {
+    _sendRecommendationRequest(value: item);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Generative AI Chat'),
         actions: [
-          ElevatedButton(
-              onPressed: _sendRecommendationRequest,
-              child: Text('Recommendations'))
+          // ElevatedButton(
+          //     onPressed: _sendRecommendationRequest,
+          //     child: Text('Recommendations')),
+          PopupMenuButton<int>(
+            color: Colors.white,
+            onSelected: (item) => _onSelected(context, item),
+            itemBuilder: (context) => [
+              PopupMenuItem<int>(
+                  value: 0, child: Text('Building Recommendation')),
+              PopupMenuItem<int>(
+                  value: 1, child: Text('Health Recommendation')),
+            ],
+          ),
         ],
       ),
       body: DashChat(
