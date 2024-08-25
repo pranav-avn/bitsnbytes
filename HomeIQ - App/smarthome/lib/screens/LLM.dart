@@ -97,7 +97,18 @@ Water Intake (per day in liters): 2L
 Sleep Duration (average hours of sleep per night) - 7hrs
 Sleep Quality (e.g., Good, Poor, Disturbed) - Poor
 
-Give them as short direct bulletin points on immediate concerns what the user should do
+And the sensor data of the building that the person stays is given below:
+Temperature: 38°C
+Humidity: 40%
+Dust: 20
+Gas levels: CO2 - 10%, O2 - 70%, LPG - 20%
+Occupancy count: 40 out of 45
+Lights: ON
+Ambient Lights value: 70 out of 100
+Soil moisture value (for indoor plants in the room): 50
+Ammonia/Urea sensor in bathroom: 40
+
+Give them as short direct bulletin points on immediate concerns what the user should do in the room concerning their health
 ''';
     }
     ChatMessage sensorMessage = ChatMessage(
@@ -121,7 +132,7 @@ Give them as short direct bulletin points on immediate concerns what the user sh
   }
 
   void sendPromptToNode(String Prompt) async {
-    const baseurl = "http://192.168.99.89:3000/api/data";
+    const baseurl = "http://192.168.238.89:3000/api/data";
     try {
       final url = Uri.parse(baseurl);
       final response = await http.post(url,
@@ -184,7 +195,7 @@ Give them as short direct bulletin points on immediate concerns what the user sh
   }
 
   Future<void> getAIResponse(ChatMessage Prompt) async {
-    const baseurl = "http://192.168.99.89:3000/api/data";
+    const baseurl = "http://192.168.238.89:3000/api/data";
     try {
       final url = Uri.parse(baseurl);
       final prompt = Prompt.text;

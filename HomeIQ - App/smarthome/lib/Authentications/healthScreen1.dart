@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +17,9 @@ class _healthscreen1State extends State<healthscreen1> {
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _waterIntakeController = TextEditingController();
-
+  int height = 0;
+  int weight = 0;
+  double bmi = 0.0;
   String? _gender;
   final TextEditingController _bmiController = TextEditingController();
   final TextEditingController _waistController = TextEditingController();
@@ -28,7 +32,7 @@ class _healthscreen1State extends State<healthscreen1> {
 
     try {
       await FirebaseFirestore.instance
-          .collection('users')
+          .collection('health metrics')
           .doc(firebaseUser?.uid)
           .set({
         'height': _heightController.text ?? '152',
@@ -37,8 +41,12 @@ class _healthscreen1State extends State<healthscreen1> {
         'gender': _gender ?? 'Male',
         'bmi': _bmiController.text ?? 30,
       });
-      // Navigator.push(
-      //     context, MaterialPageRoute(builder: (context) => healthscreen2()));
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Health Metrics Added Successfully'),
+        ),
+      );
     } catch (e) {
       print(e);
     }
@@ -58,21 +66,31 @@ class _healthscreen1State extends State<healthscreen1> {
             children: [
               TextField(
                 controller: _heightController,
-                decoration: InputDecoration(labelText: 'Height'),
+                decoration: InputDecoration(labelText: 'Height(in meters)'),
                 keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  setState(() {
+                    height = int.tryParse(value) ?? 0;
+                  });
+                },
               ),
               SizedBox(width: 16.0),
               SizedBox(height: 9),
               TextField(
                 controller: _weightController,
-                decoration: InputDecoration(labelText: 'Weight'),
+                decoration: InputDecoration(labelText: 'Weight(in kgs)'),
                 keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  setState(() {
+                    weight = int.tryParse(value) ?? 0;
+                  });
+                },
               ),
               SizedBox(width: 16.0),
               SizedBox(height: 9),
               TextField(
                 controller: _ageController,
-                decoration: InputDecoration(labelText: 'Age'),
+                decoration: InputDecoration(labelText: 'Age(in years)'),
                 keyboardType: TextInputType.number,
                 // validator: (value) {
                 //   if (value == null || value.isEmpty) {
@@ -103,15 +121,29 @@ class _healthscreen1State extends State<healthscreen1> {
                 ],
               ),
               SizedBox(height: 9),
-              TextField(
-                controller: _bmiController,
-                decoration: InputDecoration(labelText: 'BMI'),
-                keyboardType: TextInputType.number,
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _bmiController,
+                      decoration: InputDecoration(labelText: 'BMI'),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          bmi = (weight / (height * height));
+                          _bmiController.text = "$bmi";
+                        });
+                      },
+                      child: Text('Calculate BMI'))
+                ],
               ),
               TextField(
-                // controller: _waterIntakeController,
-                decoration:
-                    InputDecoration(labelText: 'Enter your Water intake'),
+                controller: _waterIntakeController,
+                decoration: InputDecoration(
+                    labelText: 'Enter your Water intake (in Litres)'),
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 9),
