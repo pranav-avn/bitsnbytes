@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
@@ -57,6 +58,7 @@ class _ChatPageState extends State<ChatPage> {
         firstName: firebaseUser.displayName ?? 'Anonymous',
         lastName: firebaseUser.email,
       );
+      print("Initialized");
     } else {
       _currentUser = ChatUser(
         id: '0',
@@ -82,7 +84,7 @@ Ambient Lights value: 70 out of 100
 Soil moisture value (for indoor plants in the room): 50
 Ammonia/Urea sensor in bathroom: 40
 
-Give it as short & direct bulletin points.
+Give atmost few as short & direct bulletin points.
 ''';
         break;
       case 1:
@@ -108,7 +110,7 @@ Ambient Lights value: 70 out of 100
 Soil moisture value (for indoor plants in the room): 50
 Ammonia/Urea sensor in bathroom: 40
 
-Give them as short direct bulletin points on immediate concerns what the user should do in the room concerning their health
+Give atmost few short direct bulletin points on immediate concerns what the user should do in the room concerning their health
 ''';
     }
     ChatMessage sensorMessage = ChatMessage(
@@ -132,7 +134,7 @@ Give them as short direct bulletin points on immediate concerns what the user sh
   }
 
   void sendPromptToNode(String Prompt) async {
-    const baseurl = "http://192.168.238.89:3000/api/data";
+    const baseurl = "https://f088-49-37-136-46.ngrok-free.app/api/data";
     try {
       final url = Uri.parse(baseurl);
       final response = await http.post(url,
@@ -195,44 +197,59 @@ Give them as short direct bulletin points on immediate concerns what the user sh
   }
 
   Future<void> getAIResponse(ChatMessage Prompt) async {
-    const baseurl = "http://192.168.238.89:3000/api/data";
+    const baseurl = "https://f088-49-37-136-46.ngrok-free.app/api/data";
+    print("GetAIResponse opened");
     try {
+      log('Sending request...');
       final url = Uri.parse(baseurl);
+      log('$url is URLLLL');
       final prompt = Prompt.text;
       final content = [Content.text(prompt)];
       final String generatedText = 'No Response Generated';
       final response = await http.post(url,
           body: jsonEncode({'prompt': prompt}), //User sending to server
           headers: {"Content-Type": "application/json"});
+      print("response collected");
       if (response.statusCode == 200) {
         final data =
             jsonDecode(response.body.toString().replaceAll("**", "").trim());
         final generatedText = data['message'] ?? 'No Response Generated';
         print(data['message']);
+        print('Request: $prompt');
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+
+        if (mounted) {
+          setState(() {
+            _messages.insert(
+              0,
+              ChatMessage(
+                user: _gptChatUser,
+                createdAt: DateTime.now(),
+                text: generatedText,
+              ),
+            );
+            _typingUsers.remove(_gptChatUser);
+          });
+        }
+      } else {
+        print("Response status code : ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error ISSSS: $e");
+      if (mounted) {
         setState(() {
           _messages.insert(
             0,
             ChatMessage(
               user: _gptChatUser,
               createdAt: DateTime.now(),
-              text: generatedText,
+              text: 'Error: Unable to generate response.',
             ),
           );
           _typingUsers.remove(_gptChatUser);
         });
       }
-    } catch (e) {
-      setState(() {
-        _messages.insert(
-          0,
-          ChatMessage(
-            user: _gptChatUser,
-            createdAt: DateTime.now(),
-            text: 'Error: Unable to generate response.',
-          ),
-        );
-        _typingUsers.remove(_gptChatUser);
-      });
     }
   }
 }

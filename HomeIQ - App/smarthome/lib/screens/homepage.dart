@@ -11,6 +11,7 @@ import 'package:smarthome/models/Deviceselection.dart';
 import 'package:smarthome/screens/userSide/feedbackScreen.dart';
 import 'package:smarthome/screens/userSide/floor_plan_rooms/floor_plan.dart';
 import 'package:smarthome/screens/userSide/userAnnouncementsPage.dart';
+import 'package:smarthome/tools/UiComponents.dart';
 import 'sensors/sensorUi.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -53,6 +54,10 @@ class _MyHomePageState extends State<MyHomePage> {
             .push(MaterialPageRoute(builder: (context) => healthscreen1()));
         break;
       case 1:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => healthscreen1()));
+        break;
+      case 2:
         Navigator.pop(context);
     }
   }
@@ -65,14 +70,16 @@ class _MyHomePageState extends State<MyHomePage> {
           'Home - IQ',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.teal,
         actions: [
           PopupMenuButton<int>(
             color: Colors.white,
             onSelected: (item) => _onSelected(context, item),
             itemBuilder: (context) => [
               PopupMenuItem<int>(value: 0, child: Text('Add Health metrics')),
-              PopupMenuItem<int>(value: 1, child: Text('Logout')),
+              PopupMenuItem<int>(value: 2, child: Text('Logout')),
+              // PopupMenuItem<int>(
+              // value: 1, child: Text('View Your health metrics'))
             ],
           ),
         ],
@@ -83,7 +90,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
-                'ANNOUNCEMENTS !!',
+                '!! ANNOUNCEMENTS !!',
+                style: TextStyle(
+                    color: Colors.teal.shade900, fontWeight: FontWeight.bold),
               ),
             ),
             StreamBuilder<QuerySnapshot>(
@@ -137,13 +146,17 @@ class _MyHomePageState extends State<MyHomePage> {
             //   child: Text('Send Fire Alert'),
             // ),
             ElevatedButton(
+                style: BtnStyle(),
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => FloorPlanWidget()));
                 },
-                child: Text('Floor PLans')),
+                child: Text(
+                  'Floor PLans',
+                  style: buttonTstlye(),
+                )),
           ],
         ),
       ),

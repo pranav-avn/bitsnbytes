@@ -16,6 +16,10 @@ TextStyle appTstyle() {
   return TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
 }
 
+ButtonStyle BtnStyle() {
+  return ElevatedButton.styleFrom(backgroundColor: Colors.teal.shade200);
+}
+
 TextStyle buttonTstlye() {
   return TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
 }

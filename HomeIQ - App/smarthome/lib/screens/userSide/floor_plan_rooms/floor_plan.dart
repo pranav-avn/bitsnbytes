@@ -231,7 +231,7 @@ class _FloorPlanWidgetState extends State<FloorPlanWidget> {
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.teal,
           ),
           body: Center(
             child: Column(

@@ -47,7 +47,7 @@ class _SignInPageState extends State<SignInPage> {
         child: Center(
           child: Card(
             margin: EdgeInsets.all(10),
-            color: Colors.purple.shade100,
+            color: Colors.teal.shade200,
             child: Padding(
               padding: const EdgeInsets.all(13.0),
               child: Column(
@@ -76,7 +76,9 @@ class _SignInPageState extends State<SignInPage> {
                       ElevatedButton(
                           onPressed: _signIn,
                           child: Text('Login',
-                              style: TextStyle(fontWeight: FontWeight.bold))),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.teal.shade900))),
                       SizedBox(width: 10),
                       ElevatedButton(
                           onPressed: () {
@@ -86,7 +88,9 @@ class _SignInPageState extends State<SignInPage> {
                                     builder: (context) => adminHomePage()));
                           },
                           child: Text('Admin Login',
-                              style: TextStyle(fontWeight: FontWeight.bold))),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.teal.shade900))),
                       SizedBox(width: 10),
                       ElevatedButton(
                           onPressed: () {
@@ -95,7 +99,10 @@ class _SignInPageState extends State<SignInPage> {
                                 MaterialPageRoute(
                                     builder: (context) => registerScreen()));
                           },
-                          child: Text('Register')),
+                          child: Text(
+                            'Register',
+                            style: TextStyle(color: Colors.teal.shade900),
+                          )),
                     ],
                   )
                 ],

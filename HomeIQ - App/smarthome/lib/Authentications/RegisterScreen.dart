@@ -38,11 +38,10 @@ class _registerScreenState extends State<registerScreen> {
         'fcmtoken': ''
       });
 
-      // Navigate to home screen after successful registration
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => MyHomePage()),
-      // );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registered successfully')),
+      );
+      Navigator.pop(context);
     } catch (e) {
       // Handle registration errors
       ScaffoldMessenger.of(context).showSnackBar(

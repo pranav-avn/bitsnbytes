@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:smarthome/tools/UiComponents.dart';
 
 class UserFeedbackListScreen extends StatelessWidget {
   @override
@@ -9,13 +10,24 @@ class UserFeedbackListScreen extends StatelessWidget {
 
     if (userid == null) {
       return Scaffold(
-        appBar: AppBar(title: Text('My Feedbacks')),
+        appBar: AppBar(
+          title: Text(
+            'My Feedbacks',
+            style: buttonTstlye(),
+          ),
+          backgroundColor: Colors.teal,
+        ),
         body: Center(child: Text('User not logged in')),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('My Feedbacks')),
+      appBar: AppBar(
+          backgroundColor: Colors.teal,
+          title: Text(
+            'My Feedbacks',
+            style: buttonTstlye(),
+          )),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('feedbacks')

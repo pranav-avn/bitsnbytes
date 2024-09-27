@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smarthome/screens/userSide/MyFeedbacks.dart';
+import 'package:smarthome/tools/UiComponents.dart';
 
 class UserFeedbackScreen extends StatefulWidget {
   @override
@@ -22,6 +23,9 @@ class _UserFeedbackScreenState extends State<UserFeedbackScreen> {
         'reply': '',
         'isreplied': false,
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Your Feedback has been added successfully')),
+      );
       _feedbackController.clear();
     }
   }
@@ -29,7 +33,13 @@ class _UserFeedbackScreenState extends State<UserFeedbackScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Submit Feedback')),
+      appBar: AppBar(
+        title: Text(
+          'Submit Feedback',
+          style: buttonTstlye(),
+        ),
+        backgroundColor: Colors.teal,
+      ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -40,8 +50,12 @@ class _UserFeedbackScreenState extends State<UserFeedbackScreen> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
+              style: BtnStyle(),
               onPressed: _submitFeedback,
-              child: Text('Submit'),
+              child: Text(
+                'Submit',
+                style: buttonTstlye(),
+              ),
             ),
           ],
         ),
