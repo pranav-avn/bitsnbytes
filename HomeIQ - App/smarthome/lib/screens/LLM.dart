@@ -134,7 +134,7 @@ Give atmost few short direct bulletin points on immediate concerns what the user
   }
 
   void sendPromptToNode(String Prompt) async {
-    const baseurl = "https://f088-49-37-136-46.ngrok-free.app/api/data";
+    const baseurl = "https://558b-49-249-229-42.ngrok-free.app/api/data";
     try {
       final url = Uri.parse(baseurl);
       final response = await http.post(url,
@@ -197,7 +197,7 @@ Give atmost few short direct bulletin points on immediate concerns what the user
   }
 
   Future<void> getAIResponse(ChatMessage Prompt) async {
-    const baseurl = "https://f088-49-37-136-46.ngrok-free.app/api/data";
+    const baseurl = "https://558b-49-249-229-42.ngrok-free.app/api/data";
     print("GetAIResponse opened");
     try {
       log('Sending request...');

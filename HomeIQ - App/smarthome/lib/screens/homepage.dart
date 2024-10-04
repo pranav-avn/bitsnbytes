@@ -2,6 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smarthome/Authentications/healthScreen1.dart';
+import 'package:smarthome/Authentications/healthScreen2.dart';
+
 import 'package:smarthome/screens/LLM.dart';
 import 'package:smarthome/screens/userSide/camerapage.dart';
 import 'package:smarthome/screens/userSide/modelResultDisplayPage.dart';
@@ -11,8 +13,11 @@ import 'package:smarthome/models/Deviceselection.dart';
 import 'package:smarthome/screens/userSide/feedbackScreen.dart';
 import 'package:smarthome/screens/userSide/floor_plan_rooms/floor_plan.dart';
 import 'package:smarthome/screens/userSide/userAnnouncementsPage.dart';
+import 'package:smarthome/screens/userSide/user_request _page.dart';
+
 import 'package:smarthome/tools/UiComponents.dart';
 import 'sensors/sensorUi.dart';
+import 'package:smarthome/screens/community/community page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, this.title});
@@ -32,7 +37,6 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-// Call this when the user logs in or at app startup
 
   @override
   void initState() {
@@ -55,9 +59,13 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case 1:
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => healthscreen1()));
+            .push(MaterialPageRoute(builder: (context) => healthscreen2()));
         break;
-      case 2:
+      case 3:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => LeaveRequestPage()));
+        break;
+      case 4:
         Navigator.pop(context);
     }
   }
@@ -77,9 +85,11 @@ class _MyHomePageState extends State<MyHomePage> {
             onSelected: (item) => _onSelected(context, item),
             itemBuilder: (context) => [
               PopupMenuItem<int>(value: 0, child: Text('Add Health metrics')),
-              PopupMenuItem<int>(value: 2, child: Text('Logout')),
-              // PopupMenuItem<int>(
-              // value: 1, child: Text('View Your health metrics'))
+              PopupMenuItem<int>(value: 1, child: Text('Add Health metrics detailed')),
+
+              PopupMenuItem<int>(value: 2, child: Text('Request permission')),
+              PopupMenuItem<int>(value: 3, child: Text('Logout')),
+
             ],
           ),
         ],
@@ -139,12 +149,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     sendFCMMessage();
-            //   },
-            //   child: Text('Send Fire Alert'),
-            // ),
             ElevatedButton(
                 style: BtnStyle(),
                 onPressed: () {
@@ -160,14 +164,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(Icons.feedback),
-      //   onPressed: () {
-      //     Navigator.push(context,
-      //         MaterialPageRoute(builder: (context) => UserFeedbackScreen()));
-      //   },
-      // ),
-      //
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -176,7 +172,6 @@ class _MyHomePageState extends State<MyHomePage> {
             child: FloatingActionButton(
               child: Icon(Icons.chat),
               onPressed: () {
-                // Add your LLM function or navigation here
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ChatPage()));
               },
@@ -189,6 +184,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => UserFeedbackScreen()));
+            },
+          ),
+          FloatingActionButton(
+            child: Icon(Icons.group), // Community icon
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => QueryListPage() )); // Navigate to CommunityPage
             },
           ),
         ],
